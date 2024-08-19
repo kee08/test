@@ -20,7 +20,7 @@ jobs:
           password: ${{ secrets.DOCKER_HUB_ACCESS_TOKEN }}
 
       - name: build docker image
-        run: docker build -t docker-image:v1 .
+        run: docker build -t docker-image .
 
       - name: tag docker image
         run: docker tag docker-image kee08/test:v1
