@@ -20,10 +20,10 @@ jobs:
           password: ${{ secrets.DOCKER_HUB_ACCESS_TOKEN }}
 
       - name: Build Docker image
-        run: docker build -t my-node-app .
+        run: docker build -t my-node-app:v1 .
 
       - name: Tag Docker image
-        run: docker tag my-node-app kee08/test
+        run: docker tag my-node-app kee08/test:v1
 
       - name: Push Docker image
-        run: docker push kee08/test
+        run: docker push kee08/test:v1
