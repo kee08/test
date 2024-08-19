@@ -23,7 +23,7 @@ jobs:
         run: docker build -t my-node-app .
 
       - name: Tag Docker image
-        run: docker tag my-node-app kee08/test:latest
+        run: docker tag my-node-app kee08/test:v1
 
       - name: Push Docker image
-        run: docker push kee08/test:latest
+        run: docker push kee08/test:v1
