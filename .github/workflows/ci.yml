@@ -36,7 +36,7 @@ jobs:
 
       - name: Push Docker Image
         run: |
-          docker push kee08/test:${{ steps.increment_version.outputs.next_version }}
+          docker push kee08/test
         env:
           DOCKER_HUB_USERNAME: ${{ secrets.DOCKER_HUB_USERNAME }}
           DOCKER_HUB_ACCESS_TOKEN: ${{ secrets.DOCKER_HUB_ACCESS_TOKEN }}
