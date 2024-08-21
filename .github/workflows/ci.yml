@@ -13,17 +13,24 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v2
 
+      - name: Increment version
+        id: Increment_version
+        run:
+          current_version=$(cat VERSION_FILE)
+          Next_version=$(semver bump minor $CURRENT_VERSION)
+          echo "::set-output name=next_version::$next_version"
+
       - name: Login to Docker Hub
         uses: docker/login-action@v2
         with:
           username: ${{ secrets.DOCKER_HUB_USERNAME }}
           password: ${{ secrets.DOCKER_HUB_ACCESS_TOKEN }}
 
-      - name: build docker image
-        run: docker build -t docker-image .
-
-      - name: tag docker image
-        run: docker tag docker-image kee08/test:v1
-
-      - name: push docker image
-        run: docker push kee08/test:v1
+      - name: Build Docker image
+        run: |
+          docker build -t docker-image .
+          docker tag docker-image kee08/test:${{ steps.increment_version.outputs.next_version }}
+          docker push kee08/test:${{ steps.increment_version.outputs.next_version }}
+        env:
+          DOCKER_HUB_USERNAME: ${{ secrets.DOCKER_HUB_USERNAME }}
+          DOCKER_HUB_ACCESS_TOKEN: ${{ secrets.DOCKER_HUB_ACCESS_TOKEN }}
