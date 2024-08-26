@@ -22,8 +22,8 @@ jobs:
 
       - name: Build Docker image
         run: |
-          IMAGE_TAG="${{ github.repository }}:${{ github.sha }}"
-          docker build -t $IMAGE_TAG .
+          IMAGE_TAG="${{ github.sha }}"
+          docker build -t my-image $IMAGE_TAG .
           echo "IMAGE_TAG=$IMAGE_TAG" >> $GITHUB_ENV
           
       - name: Push Docker image
