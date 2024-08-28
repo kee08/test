@@ -26,6 +26,12 @@ jobs:
           LATEST_TAG=${{ github.repository }}:latest
           docker build -t $IMAGE_TAG .
           docker tag $IMAGE_TAG $LATEST_TAG
+
+      - name: Tag Docker image
+        run: |
+           IMAGE_TAG=${{ git.repository }}:${{ github.sha }}
+           LATEST_TAG=${{ git.repository }}:latest
+           docker tag $IMAGE_TAG $LATEST_TAG
           
       - name: Push Docker image
         run: |
