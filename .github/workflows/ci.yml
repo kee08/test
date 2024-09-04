@@ -1,6 +1,4 @@
-
 name: Build and Push Docker Image
-
 on:
   push:
     branches:
@@ -20,16 +18,27 @@ jobs:
           username: ${{ secrets.DOCKER_HUB_USERNAME }}
           password: ${{ secrets.DOCKER_HUB_ACCESS_TOKEN }}
 
-      - name: Build Docker image
-        run: |
-          IMAGE_TAG=${{ github.repository }}:${{ github.sha }}
-          LATEST_TAG=${{ github.repository }}:latest
-          docker build -t $IMAGE_TAG .
-          docker tag $IMAGE_TAG $LATEST_TAG
-          
-      - name: Push Docker image
-        run: |
-          IMAGE_TAG=${{ github.repository }}:${{ github.sha }}
-          LATEST_TAG=${{ github.repository }}:latest
-          docker push $IMAGE_TAG
-          docker push $LATEST_TAG
+ - name: Pull previous latest image
+   run: |
+        docker pull ${{ github.repository }}:latest || true
+
+ - name: Tag previous latest image with previous SHA
+   run: |
+        PREVIOUS_TAG=${{ github.repository }}:previous
+        docker tag ${{ github.repository }}:latest $PREVIOUS_TAG || true
+
+ - name: Build Docker Image
+   run: |
+        IMAGE_TAG=${{github.repository}}:{{github.sha}}
+        LATEST_TAG=${{github.sha}}:latest
+        docker build -t ${{IMAGE_TAG}} .
+        docker tag ${{IMAGE_TAG}} ${{LATEST_TAG}}
+
+ - name: Push Docker Image
+   run: |
+        IMAGE_TAG=${{github.repository}}:{{github.sha}}
+        LATEST_TAG=${{github.sha}}:latest
+        PREVIOUS_TAG=${{ github.repository }}:previous
+        docker push ${{IMAGE_TAG}}
+        docker push ${{LATEST_TAG}}
+        docker push ${{PREVIOUS_TAG}}
