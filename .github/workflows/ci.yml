@@ -1,44 +1,44 @@
-Name: Docker ci
-On:
- Push:
-  Branch: - master
+name: Docker CI
+on:
+  push:
+    branches:
+      - master
 
-Jobs:
- Build-and-push
- Runs-on: ubuntu-latest
+jobs:
+  build-and-push:
+    runs-on: ubuntu-latest
 
- steps:
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v3
 
- - name: code checkout
-   use: actions/checkout@v3
+    - name: Docker login
+      uses: docker/login-action@v2
+      with: 
+        username: ${{ secrets.DOCKER_HUB_USERNAME }}
+        password: ${{ secrets.DOCKER_HUB_ACCESS_TOKEN }}
 
- - name: docker login
-   uses: docker/login-action@v2
-   with: 
-    username: ${{ secrets.DOCKER_HUB_USERNAME }}
-    password: ${{ secrets.DOCKER_HUB_ACCESS_TOKEN }}
-
- - name: Pull previous latest image
-   run: |
+    - name: Pull previous latest image
+      run: |
         docker pull ${{ github.repository }}:latest || true
 
- - name: Tag previous latest image with previous SHA
-   run: |
+    - name: Tag previous latest image with previous SHA
+      run: |
         PREVIOUS_TAG=${{ github.repository }}:previous
         docker tag ${{ github.repository }}:latest $PREVIOUS_TAG || true
 
- - name: Build Docker Image
-   run: |
-        IMAGE_TAG=${{github.repository}}:{{github.sha}}
-        LATEST_TAG=${{github.sha}}:latest
-        docker build -t ${{IMAGE_TAG}} .
-        docker tag ${{IMAGE_TAG}} ${{LATEST_TAG}}
+    - name: Build Docker Image
+      run: |
+        IMAGE_TAG=${{ github.repository }}:${{ github.sha }}
+        LATEST_TAG=${{ github.repository }}:latest
+        docker build -t ${{ IMAGE_TAG }} .
+        docker tag ${{ IMAGE_TAG }} $LATEST_TAG
 
- - name: Push Docker Image
-   run: |
-        IMAGE_TAG=${{github.repository}}:{{github.sha}}
-        LATEST_TAG=${{github.sha}}:latest
+    - name: Push Docker Image
+      run: |
+        IMAGE_TAG=${{ github.repository }}:${{ github.sha }}
+        LATEST_TAG=${{ github.repository }}:latest
         PREVIOUS_TAG=${{ github.repository }}:previous
-        docker push ${{IMAGE_TAG}}
-        docker push ${{LATEST_TAG}}
-        docker push ${{PREVIOUS_TAG}}
+        docker push $IMAGE_TAG
+        docker push $LATEST_TAG
+        docker push $PREVIOUS_TAG
