@@ -20,14 +20,14 @@ jobs:
 
     - name: Build Docker Image
       run: |
-        COMMIT_TAG=${{ github.repository }}:${{ github.sha }}
+        IMAGE_TAG=${{ github.repository }}:${{ github.sha }}
         MAIN_TAG=${{ github.repository }}:latest
         docker build -t $IMAGE_TAG .
         docker tag $IMAGE_TAG $LATEST_TAG
 
     - name: Push Docker Image
       run: |
-        COMMIT_TAG=${{ github.repository }}:${{ github.sha }}
+        IMAGE_TAG=${{ github.repository }}:${{ github.sha }}
         MAIN_TAG=${{ github.repository }}:latest
         docker push $IMAGE_TAG
         docker push $LATEST_TAG
