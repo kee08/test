@@ -1,11 +1,14 @@
 const express = require('express');
 const app = express();
-const PORT = 3000;
+
+const message = process.env.MESSAGE || 'Hello World';
 
 app.get('/', (req, res) => {
-  res.send('Hello from Dockerized Node.js App!');
+  res.send(message);
 });
 
-app.listen(PORT, () => {
-  console.log(`Server is running on http://localhost:${PORT}`);
+
+const port = process.env.PORT || 3000;
+app.listen(port, () => {
+  console.log(`Server is running on port ${port}`);
 });
