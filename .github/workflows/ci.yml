@@ -18,6 +18,10 @@ jobs:
         username: ${{ secrets.DOCKER_HUB_USERNAME }}
         password: ${{ secrets.DOCKER_HUB_ACCESS_TOKEN }}
 
+    - name: Get short SHA
+      id: vars
+      run: echo "SHORT_SHA=$(git rev-parse --short HEAD)" >> $GITHUB_ENV
+
     - name: Build Docker Image
       run: |
         IMAGE_TAG=${{ github.repository }}:${{ github.sha }}
